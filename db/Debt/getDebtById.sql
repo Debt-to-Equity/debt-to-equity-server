@@ -1,0 +1,1 @@
+SELECT * from debt where user_id = 17;
