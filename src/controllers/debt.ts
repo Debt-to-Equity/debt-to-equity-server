@@ -38,7 +38,6 @@ export default {
 
         let time = await getTimeToPayOff(debts.debts, budget.budget, revenue.revenue)
 
-        console.log(time)
         res.send(time)
     },
     // getHomeValue

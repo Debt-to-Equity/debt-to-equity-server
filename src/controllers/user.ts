@@ -18,7 +18,6 @@ let transporter = nodemailer.createTransport({
 
 module.exports = {
     createUser: async (req: Request, res: Response) => {
-        const db = req.app.get("db");
         let { firstName, lastName, email, phoneNumber } = req.body;
 
         //@ts-ignore
@@ -36,22 +35,14 @@ module.exports = {
 
             let token = crypto.randomBytes(6).toString('hex')
             console.log('token')
-            // let [createdUser] = await db.User.insertUser([
-            //     firstName,
-            //     lastName,
-            //     email,
-            //     phoneNumber,
-            //     1,
-            //     'customer',
-            //     new Date()
-            // ]);
+
             let createdUser = new UserModel({
                 firstName,
                 lastName,
                 email,
                 phoneNumber,
                 password: null,
-                parentId: '61fcd5bfce33fc3fa244e40b',
+                parentId: '620dab677c0082f4b08cb471',
                 typeOfUser: 'client',
                 address: null,
                 createdAt: new Date(),

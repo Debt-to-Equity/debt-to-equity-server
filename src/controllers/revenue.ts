@@ -5,7 +5,6 @@ export default {
         const { revenue } = req.body;
         const { userId } = req.params;
 
-        console.log(userId)
         let cleanedRevenue = new RevenueModel({
             userId,
             revenue: revenue.map(ele => {
@@ -22,8 +21,6 @@ export default {
         })
 
         const newRevenue = await cleanedRevenue.save();
-
-        console.log(newRevenue);
 
         res.send(newRevenue.revenue);
     }
