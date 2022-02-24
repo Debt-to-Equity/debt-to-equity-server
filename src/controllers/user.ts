@@ -5,16 +5,16 @@ import crypto from 'crypto'
 import nodemailer from 'nodemailer'
 import { Users as UserModel } from '../models/User'
 
-let transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com",
-    secureConnection: false,
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: 'coopergoldenholt@outlook.com', // generated ethereal user
-        pass: 'Colbyholt1', // generated ethereal password
-    },
-});
+// let transporter = nodemailer.createTransport({
+//     host: "smtp-mail.outlook.com",
+//     secureConnection: false,
+//     port: 587,
+//     secure: false, // true for 465, false for other ports
+//     auth: {
+//         user: 'coopergoldenholt@outlook.com', // generated ethereal user
+//         pass: '', // generated ethereal password
+//     },
+// });
 
 module.exports = {
     createUser: async (req: Request, res: Response) => {
