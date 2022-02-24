@@ -5,7 +5,6 @@ exports.default = {
     insertMultipleRevenue: async (req, res) => {
         const { revenue } = req.body;
         const { userId } = req.params;
-        console.log(userId);
         let cleanedRevenue = new Revenue_1.Revenue({
             userId,
             revenue: revenue.map(ele => {
@@ -21,7 +20,6 @@ exports.default = {
             updatedAt: new Date()
         });
         const newRevenue = await cleanedRevenue.save();
-        console.log(newRevenue);
         res.send(newRevenue.revenue);
     }
 };

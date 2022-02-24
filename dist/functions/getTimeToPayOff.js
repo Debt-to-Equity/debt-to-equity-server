@@ -27,8 +27,6 @@ const getTimeToPayOff = (debts, budget, revenue) => {
         return acc += parseInt(bud.amount);
     }, 0);
     let newDebts = debts;
-    console.log('revenue', monthlyRevenue);
-    console.log('budget', monthlySetBudget);
     let monthlyCashFlow = monthlyRevenue - monthlySetBudget;
     let totalMonths = 0;
     while (debtTotal > 0) {
@@ -62,7 +60,6 @@ const getTimeToPayOff = (debts, budget, revenue) => {
                 debtTotal -= amortizationScheudle.monthlyPrincipal;
             });
         }
-        console.log('monthlyCashFlow', monthlyCashFlow);
         debtTotal -= monthlyCashFlow;
     }
     ;

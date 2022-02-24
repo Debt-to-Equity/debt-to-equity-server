@@ -6,21 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const email_validator_1 = __importDefault(require("email-validator"));
 const crypto_1 = __importDefault(require("crypto"));
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const User_1 = require("../models/User");
-let transporter = nodemailer_1.default.createTransport({
-    host: "smtp-mail.outlook.com",
-    secureConnection: false,
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'coopergoldenholt@outlook.com',
-        pass: 'Colbyholt1',
-    },
-});
 module.exports = {
     createUser: async (req, res) => {
-        const db = req.app.get("db");
         let { firstName, lastName, email, phoneNumber } = req.body;
         let { user } = req.session;
         const validEmail = await email_validator_1.default.validate(email);
@@ -41,7 +29,7 @@ module.exports = {
                 email,
                 phoneNumber,
                 password: null,
-                parentId: '61fcd5bfce33fc3fa244e40b',
+                parentId: '620dab677c0082f4b08cb471',
                 typeOfUser: 'client',
                 address: null,
                 createdAt: new Date(),

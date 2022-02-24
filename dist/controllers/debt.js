@@ -30,7 +30,6 @@ exports.default = {
         const [revenue] = await Revenue_1.Revenue.find({ userId });
         const [debts] = await Debt_1.Debt.find({ userId });
         let time = await getTimeToPayOff_1.getTimeToPayOff(debts.debts, budget.budget, revenue.revenue);
-        console.log(time);
         res.send(time);
     },
 };
