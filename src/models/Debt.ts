@@ -6,7 +6,8 @@ const DebtSchema = new Schema({
   userId: Types.ObjectId,
   debts: [{
     name: String,
-    amount: Number,
+    startingAmount: Number,
+    amountRemaining: Number,
     createdAt: Date,
     updatedAt: Date
   }],

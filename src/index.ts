@@ -32,24 +32,15 @@ const main = async () => {
   //@ts-ignore
   const server = mongoose.connect(MONGO_DB_URI);
 
-  // const stuff = await Budget.insertMany([{ name: 'Water', amount: 400, revenue: false, createdAt: new Date(), updatedAt: new Date() }]);
+  app.post('/login', userCtrl.loginUser);
+  app.post('/register', userCtrl.createUser);
 
-  // const db = await massive({
-  //   connectionString: CONNECTION_STRING,
-  //   //@ts-ignore
-  //   ssl: { rejectUnauthorized: false },
-  // })
+  app.get('/payoff/:userId', debtCtrl.getPayoff);
+  app.get('/debt/:userId', debtCtrl.getDebts);
 
-  // await app.set('db', db)
-
-  app.post('/login', userCtrl.loginUser)
-  app.post('/register', userCtrl.createUser)
-
-  app.get('/payoff/:userId', debtCtrl.getPayoff)
-
-  app.post('/revenue/:userId', revenue.insertMultipleRevenue)
-  app.post('/debt/:userId', debtCtrl.insertMultipleDebts)
-  app.post('/budget/:userId', expectedCtrl.insertBudget)
+  app.post('/revenue/:userId', revenue.insertMultipleRevenue);
+  app.post('/debt/:userId', debtCtrl.insertMultipleDebts);
+  app.post('/budget/:userId', expectedCtrl.insertBudget);
 
   app.listen(PORT, () => {
     console.log("server started on localhost:4000");
