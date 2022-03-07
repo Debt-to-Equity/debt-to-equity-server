@@ -9,7 +9,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_session_1 = __importDefault(require("express-session"));
 const { PORT, MONGO_DB_URI } = process.env;
-const userCtrl = require('./controllers/user');
+const user_1 = __importDefault(require("./controllers/user"));
 const budget_1 = __importDefault(require("./controllers/budget"));
 const debt_1 = __importDefault(require("./controllers/debt"));
 const revenue_1 = __importDefault(require("./controllers/revenue"));
@@ -28,9 +28,10 @@ const main = async () => {
         },
     }));
     const server = mongoose_1.default.connect(MONGO_DB_URI);
-    app.post('/login', userCtrl.loginUser);
-    app.post('/register', userCtrl.createUser);
+    app.post('/login', user_1.default.loginUser);
+    app.post('/register', user_1.default.createUser);
     app.get('/payoff/:userId', debt_1.default.getPayoff);
+    app.get('/debt/:userId', debt_1.default.getDebts);
     app.post('/revenue/:userId', revenue_1.default.insertMultipleRevenue);
     app.post('/debt/:userId', debt_1.default.insertMultipleDebts);
     app.post('/budget/:userId', budget_1.default.insertBudget);

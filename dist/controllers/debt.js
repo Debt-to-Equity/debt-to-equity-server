@@ -8,21 +8,37 @@ exports.default = {
     insertMultipleDebts: async (req, res) => {
         const { debts } = req.body;
         const { userId } = req.params;
+        const date = new Date();
         let cleanedDebts = new Debt_1.Debt({
             userId,
             debts: debts.map(ele => {
                 return {
                     name: ele.name,
-                    amount: ele.amount,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
+                    startingAmount: ele.amount,
+                    amountRemaining: ele.amount,
+                    createdAt: date,
+                    updatedAt: date
                 };
             }),
-            createdAt: new Date(),
-            updatedAt: new Date()
+            createdAt: date,
+            updatedAt: date
         });
         const userDebt = await cleanedDebts.save();
         res.send(userDebt.debts);
+    },
+    getDebts: async (req, res) => {
+        let { userId } = req.params;
+        const [userDebt] = await Debt_1.Debt.find({ userId });
+        let totalDebt = userDebt.debts.reduce((acc, debt) => {
+            return {
+                startingAmount: acc += debt.startingAmount,
+                amountRemaining: acc += debt.amountRemaining
+            };
+        }, 0);
+        res.send({
+            totalDebt,
+            debts: userDebt.debts
+        });
     },
     getPayoff: async (req, res) => {
         let { userId } = req.params;

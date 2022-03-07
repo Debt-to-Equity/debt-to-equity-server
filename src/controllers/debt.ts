@@ -1,7 +1,6 @@
 import { Debt as DebtModel } from "../models/Debt";
 import { Budget as BudgetModel } from '../models/Budget';
 import { Revenue as RevenueModel } from '../models/Revenue';
-import { Payment as PaymentModel } from '../models/Payment';
 import { getTimeToPayOff } from "../functions/getTimeToPayOff";
 
 export default {

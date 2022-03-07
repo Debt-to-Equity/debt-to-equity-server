@@ -23,7 +23,10 @@ const UsersSchema = new Schema({
     },
     createdAt: Date,
     updatedAt: Date,
-    token: String
+    token: {
+        string: String,
+        createdAt: Date
+    }
 });
 exports.Users = mongoose_1.default.model('user', UsersSchema);
 //# sourceMappingURL=User.js.map

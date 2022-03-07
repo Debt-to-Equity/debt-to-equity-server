@@ -19,7 +19,10 @@ const UsersSchema = new Schema({
   },
   createdAt: Date,
   updatedAt: Date,
-  token: String
+  token: {
+    string: String,
+    createdAt: Date
+  }
 });
 
 export const Users = mongoose.model('user', UsersSchema)

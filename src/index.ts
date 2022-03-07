@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from 'mongoose'
 import session from "express-session";
 const { PORT, MONGO_DB_URI } = process.env;
-const userCtrl = require('./controllers/user');
+import userCtrl from './controllers/user';
 import expectedCtrl from './controllers/budget'
 import debtCtrl from './controllers/debt'
 import revenue from "./controllers/revenue";
