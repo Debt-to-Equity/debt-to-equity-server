@@ -34,6 +34,7 @@ const main = async () => {
 
   app.post('/login', userCtrl.loginUser);
   app.post('/register', userCtrl.createUser);
+  app.post('/password', userCtrl.changePassword)
 
   app.get('/payoff/:userId', debtCtrl.getPayoff);
   app.get('/debt/:userId', debtCtrl.getDebts);

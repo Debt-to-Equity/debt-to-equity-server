@@ -35,8 +35,6 @@ export default {
             }
 
             let token = getRandomString(6);
-            console.log('token', token);
-            console.log('date', date);
 
             let createdUser = new UserModel({
                 firstName,
@@ -57,8 +55,6 @@ export default {
 
             const user = await createdUser.save()
 
-            // await db.User.insertToken([createdUser.id, token, new Date()])
-
             // transporter.sendMail({
             //     from: "coopergoldenholt@outlook.com", // sender address
             //     to: email, // list of receivers
@@ -70,14 +66,24 @@ export default {
             // </p>`,
             // });
 
-            return res.send(user);
+            return res.send({
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                loggedIn: true,
+                userType: user.typeOfUser,
+                id: user._id,
+                phoneNumber: user.phoneNumber,
+                parentId: user.parentId,
+                address: user.address
+            });
         }
     },
     loginUser: async (req, res) => {
         let { email, password } = req.body;
 
         email = email.toLowerCase();
-        const [user] = await UserModel.findOne(email);
+        const user = await UserModel.findOne({ email });
         if (!user) {
             return res.send({ error: 401, message: "Email or Password incorrect." });
         }
@@ -104,20 +110,21 @@ export default {
 
     },
     changePassword: async (req, res) => {
-        let { email, password, token, phoneNumber } = req.body
-        let user = await UserModel.findOne(email);
+        let { email, password, token, phoneNumber } = req.body;
+        email = email.toLowerCase();
+        let user = await UserModel.findOne({ email });
         if (!user) {
             return res.send({ error: 401, message: "Email could not be found." });
         };
-        console.log(user.token.createdAt.addDays('3'));
+        // console.log(user.token.createdAt.addDays('3'));
 
         if (user.token.string !== token) {
             return res.send({ error: 401, message: "Incorrect Token" });
         };
 
-        if (user.token.createdAt > user.token.createdAt.addDays('3')) {
-            return res.sed({ error: 400, message: "Token is expired" })
-        };
+        // if (user.token.createdAt > user.token.createdAt.addDays('3')) {
+        //     return res.sed({ error: 400, message: "Token is expired" })
+        // };
 
         if (user.phoneNumber !== phoneNumber) {
             return res.send({ error: 401, message: "Phone Numbers do not match." });

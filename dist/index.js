@@ -30,6 +30,7 @@ const main = async () => {
     const server = mongoose_1.default.connect(MONGO_DB_URI);
     app.post('/login', user_1.default.loginUser);
     app.post('/register', user_1.default.createUser);
+    app.post('/password', user_1.default.changePassword);
     app.get('/payoff/:userId', debt_1.default.getPayoff);
     app.get('/debt/:userId', debt_1.default.getDebts);
     app.post('/revenue/:userId', revenue_1.default.insertMultipleRevenue);

@@ -23,8 +23,6 @@ exports.default = {
                 return res.send({ error: 401, message: "Email already in use" });
             }
             let token = getRandomString_1.getRandomString(6);
-            console.log('token', token);
-            console.log('date', date);
             let createdUser = new User_1.Users({
                 firstName,
                 lastName,
@@ -42,13 +40,23 @@ exports.default = {
                 }
             });
             const user = await createdUser.save();
-            return res.send(user);
+            return res.send({
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                loggedIn: true,
+                userType: user.typeOfUser,
+                id: user._id,
+                phoneNumber: user.phoneNumber,
+                parentId: user.parentId,
+                address: user.address
+            });
         }
     },
     loginUser: async (req, res) => {
         let { email, password } = req.body;
         email = email.toLowerCase();
-        const [user] = await User_1.Users.findOne(email);
+        const user = await User_1.Users.findOne({ email });
         if (!user) {
             return res.send({ error: 401, message: "Email or Password incorrect." });
         }
@@ -71,18 +79,14 @@ exports.default = {
     },
     changePassword: async (req, res) => {
         let { email, password, token, phoneNumber } = req.body;
-        let user = await User_1.Users.findOne(email);
+        email = email.toLowerCase();
+        let user = await User_1.Users.findOne({ email });
         if (!user) {
             return res.send({ error: 401, message: "Email could not be found." });
         }
         ;
-        console.log(user.token.createdAt.addDays('3'));
         if (user.token.string !== token) {
             return res.send({ error: 401, message: "Incorrect Token" });
-        }
-        ;
-        if (user.token.createdAt > user.token.createdAt.addDays('3')) {
-            return res.sed({ error: 400, message: "Token is expired" });
         }
         ;
         if (user.phoneNumber !== phoneNumber) {
