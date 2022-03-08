@@ -9,7 +9,6 @@ exports.default = {
         const { debts } = req.body;
         const { userId } = req.params;
         const date = new Date();
-        console.log('user ;id', userId);
         let cleanedDebts = new Debt_1.Debt({
             userId,
             debts: debts.map(ele => {
