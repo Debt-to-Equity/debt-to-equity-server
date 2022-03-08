@@ -9,6 +9,7 @@ exports.default = {
         const { debts } = req.body;
         const { userId } = req.params;
         const date = new Date();
+        console.log('user ;id', userId);
         let cleanedDebts = new Debt_1.Debt({
             userId,
             debts: debts.map(ele => {
@@ -28,7 +29,7 @@ exports.default = {
     },
     getDebts: async (req, res) => {
         let { userId } = req.params;
-        const [userDebt] = await Debt_1.Debt.find({ userId });
+        const userDebt = await Debt_1.Debt.findById({ userId });
         let totalDebt = userDebt.debts.reduce((acc, debt) => {
             return {
                 startingAmount: acc += debt.startingAmount,

@@ -2,7 +2,7 @@ import argon2 from 'argon2';
 import validator from 'email-validator';
 import { Request, Response } from 'express';
 import { getRandomString } from '../functions/getRandomString'
-import nodemailer from 'nodemailer'
+// import nodemailer from 'nodemailer'
 import { Users as UserModel } from '../models/User'
 
 

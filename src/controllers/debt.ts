@@ -32,7 +32,7 @@ export default {
     getDebts: async (req, res) => {
         let { userId } = req.params
 
-        const [userDebt] = await DebtModel.find({ userId });
+        const userDebt = await DebtModel.findById({ userId });
         // const [payments] = await PaymentModel.find({ userId });
 
         let totalDebt = userDebt.debts.reduce((acc, debt) => {
