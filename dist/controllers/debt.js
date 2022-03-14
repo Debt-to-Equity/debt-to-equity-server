@@ -11,33 +11,49 @@ exports.default = {
         const date = new Date();
         let cleanedDebts = new Debt_1.Debt({
             userId,
-            debts: debts.map(ele => {
+            debts: debts.map((ele) => {
                 return {
                     name: ele.name,
                     startingAmount: ele.amount,
                     amountRemaining: ele.amount,
                     createdAt: date,
-                    updatedAt: date
+                    updatedAt: date,
                 };
             }),
             createdAt: date,
-            updatedAt: date
+            updatedAt: date,
         });
         const userDebt = await cleanedDebts.save();
         res.send(userDebt.debts);
     },
     getDebts: async (req, res) => {
         let { userId } = req.params;
-        const userDebt = await Debt_1.Debt.findById({ userId });
+        const userDebt = await Debt_1.Debt.findOne({ userId });
+        if (!userDebt) {
+            return res.send("User does not have any debts");
+        }
         let totalDebt = userDebt.debts.reduce((acc, debt) => {
+            acc.startingAmount += debt.startingAmount;
+            acc.amountRemaining += debt.amountRemaining;
+            return acc;
+        }, {
+            startingAmount: 0,
+            amountRemaining: 0,
+        });
+        let cleanedDebts = userDebt.debts.map((debt) => {
             return {
-                startingAmount: acc += debt.startingAmount,
-                amountRemaining: acc += debt.amountRemaining
+                name: debt.name,
+                startingAmount: debt.startingAmount,
+                amountRemaining: debt.amountRemaining,
+                createdAt: debt.createdAt,
+                updatedAt: debt.updatedAt,
+                id: debt.id,
             };
-        }, 0);
+        });
         res.send({
+            userId: userDebt.userId,
             totalDebt,
-            debts: userDebt.debts
+            debts: cleanedDebts,
         });
     },
     getPayoff: async (req, res) => {
