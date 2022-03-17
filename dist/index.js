@@ -17,7 +17,7 @@ const main = async () => {
     const app = express_1.default();
     app.use(express_1.default.json());
     app.use(express_session_1.default({
-        secret: 'jhkjhkljhlkhiuihkn kjhiuh87yt7ezsxd',
+        secret: "jhkjhkljhlkhiuihkn kjhiuh87yt7ezsxd",
         resave: false,
         saveUninitialized: true,
         cookie: {
@@ -28,14 +28,15 @@ const main = async () => {
         },
     }));
     const server = mongoose_1.default.connect(MONGO_DB_URI);
-    app.post('/login', user_1.default.loginUser);
-    app.post('/register', user_1.default.createUser);
-    app.post('/password', user_1.default.changePassword);
-    app.get('/payoff/:userId', debt_1.default.getPayoff);
-    app.get('/debt/:userId', debt_1.default.getDebts);
-    app.post('/revenue/:userId', revenue_1.default.insertMultipleRevenue);
-    app.post('/debt/:userId', debt_1.default.insertMultipleDebts);
-    app.post('/budget/:userId', budget_1.default.insertBudget);
+    app.post("/login", user_1.default.loginUser);
+    app.post("/register/:userId", user_1.default.createUser);
+    app.post("/password", user_1.default.changePassword);
+    app.get("/payoff/:userId", debt_1.default.getPayoff);
+    app.get("/debt/:userId", debt_1.default.getDebts);
+    app.get("/user/children/:userId", user_1.default.getChildUsers);
+    app.post("/revenue/:userId", revenue_1.default.insertMultipleRevenue);
+    app.post("/debt/:userId", debt_1.default.insertMultipleDebts);
+    app.post("/budget/:userId", budget_1.default.insertBudget);
     app.listen(PORT, () => {
         console.log("server started on localhost:4000");
     });
