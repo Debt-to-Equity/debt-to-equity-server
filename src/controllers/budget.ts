@@ -5,6 +5,8 @@ export default {
     const { budget } = req.body;
     const { userId } = req.params;
 
+    const date = new Date();
+
     let cleanedBudget = new BudgetModel({
       userId,
       budget: budget.map((ele) => {
@@ -15,12 +17,12 @@ export default {
           amortized: ele.amortized,
           interestRate: ele.interestRate,
           yearsLeft: ele.yearsLeft,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: date,
+          updatedAt: date,
         };
       }),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: date,
+      updatedAt: date,
     });
 
     const newBudget = await cleanedBudget.save();

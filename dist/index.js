@@ -12,6 +12,7 @@ const { PORT, MONGO_DB_URI } = process.env;
 const user_1 = __importDefault(require("./controllers/user"));
 const budget_1 = __importDefault(require("./controllers/budget"));
 const debt_1 = __importDefault(require("./controllers/debt"));
+const budget_2 = __importDefault(require("./controllers/budget"));
 const revenue_1 = __importDefault(require("./controllers/revenue"));
 const main = async () => {
     const app = express_1.default();
@@ -34,6 +35,7 @@ const main = async () => {
     app.get("/payoff/:userId", debt_1.default.getPayoff);
     app.get("/debt/:userId", debt_1.default.getDebts);
     app.get("/user/children/:userId", user_1.default.getChildUsers);
+    app.get("/user/budget/:userId", budget_2.default.getBudget);
     app.post("/revenue/:userId", revenue_1.default.insertMultipleRevenue);
     app.post("/debt/:userId", debt_1.default.insertMultipleDebts);
     app.post("/budget/:userId", budget_1.default.insertBudget);

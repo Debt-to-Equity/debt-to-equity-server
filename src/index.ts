@@ -7,6 +7,7 @@ const { PORT, MONGO_DB_URI } = process.env;
 import userCtrl from "./controllers/user";
 import expectedCtrl from "./controllers/budget";
 import debtCtrl from "./controllers/debt";
+import budgetCtrl from "./controllers/budget";
 import revenue from "./controllers/revenue";
 
 const main = async () => {
@@ -38,6 +39,7 @@ const main = async () => {
   app.get("/payoff/:userId", debtCtrl.getPayoff);
   app.get("/debt/:userId", debtCtrl.getDebts);
   app.get("/user/children/:userId", userCtrl.getChildUsers);
+  app.get("/user/budget/:userId", budgetCtrl.getBudget);
 
   app.post("/revenue/:userId", revenue.insertMultipleRevenue);
   app.post("/debt/:userId", debtCtrl.insertMultipleDebts);
