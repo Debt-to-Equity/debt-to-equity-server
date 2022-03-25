@@ -33,7 +33,6 @@ export default {
     let { userId } = req.params;
 
     const userDebt = await DebtModel.findOne({ userId });
-    // const [payments] = await PaymentModel.find({ userId });
 
     if (!userDebt) {
       return res.send("User does not have any debts");
