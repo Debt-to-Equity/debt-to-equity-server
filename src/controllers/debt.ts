@@ -57,7 +57,7 @@ export default {
         amountRemaining: debt.amountRemaining,
         createdAt: debt.createdAt,
         updatedAt: debt.updatedAt,
-        id: debt.id,
+        id: debt._id,
       };
     });
 
@@ -69,13 +69,10 @@ export default {
   },
   getPayoff: async (req, res) => {
     let { userId } = req.params;
-    // const { expected } = req.body;
 
     const [budget] = await BudgetModel.find({ userId });
     const [revenue] = await RevenueModel.find({ userId });
     const [debts] = await DebtModel.find({ userId });
-
-    // const expected = await db.Expected.getExpectedById()
 
     let time = await getTimeToPayOff(
       debts.debts,
@@ -85,5 +82,4 @@ export default {
 
     res.send(time);
   },
-  // getHomeValue
 };

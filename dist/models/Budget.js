@@ -9,7 +9,8 @@ const { Schema, Types } = mongoose_1.default;
 const BudgetSchema = new Schema({
     userId: Types.ObjectId,
     debtId: Types.ObjectId,
-    budget: [{
+    budget: [
+        {
             name: String,
             budgetId: Types.ObjectId,
             amount: Number,
@@ -17,11 +18,13 @@ const BudgetSchema = new Schema({
             amortized: Boolean,
             interestRate: Number,
             yearsLeft: Number,
+            startingYears: Number,
             createdAt: Date,
-            updatedAt: Date
-        }],
+            updatedAt: Date,
+        },
+    ],
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
 });
 exports.Budget = mongoose_1.default.model("Budget", BudgetSchema);
 //# sourceMappingURL=Budget.js.map

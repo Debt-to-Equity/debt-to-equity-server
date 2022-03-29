@@ -1,89 +1,128 @@
-const getAmortizationPayments = (balance: number, interestRate: number, months) => {
-    let monthlyRate = interestRate / 12 / 100;
+import { IDebts, IBudget, IRevenune } from "../types";
 
-    let payment = balance * (monthlyRate / (1 - Math.pow(
-        1 + monthlyRate, -months)))
+interface LoopedDebts extends IDebts {
+  paidOff?: boolean;
+}
 
-    let interest = balance * monthlyRate;
+interface LoopedBudget extends IBudget {
+  monthlyPayment?: number;
+}
 
-    let monthlyPrincipal = payment - interest;
-
-    return {
-        interest,
-        monthlyPrincipal,
-        payment
-    }
+const getPrincipalPaid = (monthlyPayment, loanBalance, interestRate) => {
+  let interestRatePerMonth = interestRate / 12 / 100;
+  let principalPaid = monthlyPayment - loanBalance * interestRatePerMonth;
+  return principalPaid;
 };
 
-export const getTimeToPayOff = (debts, budget, revenue) => {
-    let debtTotal = debts.reduce((acc, debt) => {
-        return acc += parseInt(debt.amount)
-    }, 0)
+function getStandardPayment(startingLoanAmount, interestRate) {
+  let interestRatePerMonth = interestRate / 12 / 100;
+  let payment = startingLoanAmount * interestRatePerMonth;
 
-    let monthlyRevenue = revenue.reduce((acc, rev) => {
-        return acc += parseInt(rev.amount);
-    }, 0)
+  return payment;
+}
 
-    let monthlySetBudget = budget.reduce((acc, bud) => {
-        if (bud.debtId) {
-            return acc;
-        };
-        return acc += parseInt(bud.amount);
-    }, 0)
+function getMortgagePayment(startingLoanAmount, totalPayments, interestRate) {
+  let interestRatePerMonth = interestRate / 12 / 100;
 
-    let newDebts = debts;
+  let payment =
+    (startingLoanAmount *
+      interestRatePerMonth *
+      Math.pow(1 + interestRatePerMonth, totalPayments)) /
+    (Math.pow(1 + interestRatePerMonth, totalPayments) - 1);
 
-    let monthlyCashFlow = monthlyRevenue - monthlySetBudget;
+  return payment;
+}
 
-    let totalMonths = 0;
+export const getTimeToPayOff = (
+  debts: IDebts[],
+  budget: IBudget[],
+  revenue: IRevenune[]
+) => {
+  let newBudget: LoopedBudget[] = budget;
 
-    while (debtTotal > 0) {
-        if (totalMonths > 500) break;
-        totalMonths += 1;
+  let debtTotal = debts.reduce((acc, debt) => {
+    return (acc += debt.amountRemaining);
+  }, 0);
 
-        for (let i = 0; i < newDebts.length; i++) {
-            if (newDebts[i].payedOff) {
-                continue;
-            }
+  let monthlyRevenue = revenue.reduce((acc, rev) => {
+    return (acc += parseInt(rev.amount));
+  }, 0);
 
-            if (newDebts[i].amount <= 0) {
-                let [filtBudget] = budget.filter(bud => newDebts[i]._id.toString() === bud?.debtId?.toString());
+  let monthlySetBudget = budget.reduce((acc, bud, indx) => {
+    if (!bud.debtId) {
+      return (acc += bud.amount);
+    }
+    const attachedDebt = debts.find((debt) => debt._id.equals(bud.debtId));
 
-                if (!filtBudget?.amortized) {
-                    continue;
-                }
+    if (!bud.amortized) {
+      return (acc += getStandardPayment(
+        attachedDebt?.amountRemaining,
+        bud.interestRate
+      ));
+    }
 
-                monthlyCashFlow += getAmortizationPayments(debts[i].amount, filtBudget.interestRate, filtBudget.yearsLeft * 12).payment;
-                newDebts[i]['payedOff'] = true;
-                continue;
-            };
+    let amortization = getMortgagePayment(
+      attachedDebt?.amountRemaining,
+      bud.yearsLeft * 12,
+      bud.interestRate
+    );
 
-            budget.filter(bud => newDebts[i]._id.toString() === bud?.debtId?.toString())
-                .map(bud => {
-                    if (bud.amortized !== true) {
-                        let monthlyInterest = newDebts[i].amount * (bud.interest / 100) / 12;
-                        let principal = bud.amount - monthlyInterest;
-                        newDebts[i].amount -= principal;
-                        debtTotal -= principal;
-                    }
-                    let amortizationScheudle = getAmortizationPayments(newDebts[i].amount, bud.interestRate, bud.yearsLeft * 12 - totalMonths);
-                    newDebts[i].amount -= amortizationScheudle.monthlyPrincipal;
-                    debtTotal -= amortizationScheudle.monthlyPrincipal;
-                });
-        }
+    newBudget[indx]["monthlyPayment"] = amortization;
 
-        debtTotal -= monthlyCashFlow;
-    };
+    return (acc += amortization);
+  }, 0);
 
-    if (totalMonths > 11) {
-        return {
-            years: Math.floor(totalMonths / 12),
-            months: totalMonths % 12
-        };
-    };
+  let newDebts: LoopedDebts[] = debts;
 
+  let monthlyCashFlow = monthlyRevenue - monthlySetBudget;
+
+  let totalMonths = 0;
+
+  while (debtTotal > 0) {
+    if (totalMonths > 500) break;
+    totalMonths += 1;
+
+    for (let i = 0; i < newDebts.length; i++) {
+      if (newDebts[i].paidOff) {
+        continue;
+      }
+
+      const attachedBudget = newBudget.find(
+        (bud) => newDebts[i]._id.toString() === bud?.debtId?.toString()
+      );
+
+      if (!attachedBudget?.amortized) {
+        continue;
+      }
+
+      const principalPaid = getPrincipalPaid(
+        attachedBudget.monthlyPayment,
+        attachedBudget.interestRate,
+        attachedBudget.yearsLeft * 12 - totalMonths
+      );
+
+      debtTotal += principalPaid;
+
+      newDebts[i].amountRemaining -= principalPaid;
+
+      if (newDebts[i].amountRemaining <= 0) {
+        monthlyCashFlow += attachedBudget.monthlyPayment ?? 0;
+        newDebts[i]["payedOff"] = true;
+      }
+    }
+
+    debtTotal -= monthlyCashFlow;
+  }
+
+  if (totalMonths > 11) {
     return {
-        years: null,
-        months: totalMonths
+      years: Math.floor(totalMonths / 12),
+      months: totalMonths % 12,
     };
+  }
+
+  return {
+    years: 0,
+    months: totalMonths,
+  };
 };

@@ -47,7 +47,7 @@ exports.default = {
                 amountRemaining: debt.amountRemaining,
                 createdAt: debt.createdAt,
                 updatedAt: debt.updatedAt,
-                id: debt.id,
+                id: debt._id,
             };
         });
         res.send({
