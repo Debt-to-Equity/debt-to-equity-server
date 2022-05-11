@@ -18,6 +18,7 @@
     "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "express-openid-connect": "^2.7.2",
     "express-session": "^1.17.2",
     "graphql": "^15.5.1",
     "ioredis": "^4.27.7",
