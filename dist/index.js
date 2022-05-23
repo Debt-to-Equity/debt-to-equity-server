@@ -36,6 +36,7 @@ const main = async () => {
     app.get("/debt/:userId", debt_1.default.getDebts);
     app.get("/user/children/:userId", user_1.default.getChildUsers);
     app.get("/user/budget/:userId", budget_2.default.getBudget);
+    app.get("/user/revenue/:userId", revenue_1.default.getRevenue);
     app.post("/revenue/:userId", revenue_1.default.insertMultipleRevenue);
     app.post("/debt/:userId", debt_1.default.insertMultipleDebts);
     app.post("/budget/:userId", budget_1.default.insertBudget);

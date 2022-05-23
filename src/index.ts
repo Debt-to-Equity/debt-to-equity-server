@@ -8,7 +8,7 @@ import userCtrl from "./controllers/user";
 import expectedCtrl from "./controllers/budget";
 import debtCtrl from "./controllers/debt";
 import budgetCtrl from "./controllers/budget";
-import revenue from "./controllers/revenue";
+import revenueCtrl from "./controllers/revenue";
 
 const main = async () => {
   const app = express();
@@ -40,8 +40,9 @@ const main = async () => {
   app.get("/debt/:userId", debtCtrl.getDebts);
   app.get("/user/children/:userId", userCtrl.getChildUsers);
   app.get("/user/budget/:userId", budgetCtrl.getBudget);
+  app.get("/user/revenue/:userId", revenueCtrl.getRevenue);
 
-  app.post("/revenue/:userId", revenue.insertMultipleRevenue);
+  app.post("/revenue/:userId", revenueCtrl.insertMultipleRevenue);
   app.post("/debt/:userId", debtCtrl.insertMultipleDebts);
   app.post("/budget/:userId", expectedCtrl.insertBudget);
 
