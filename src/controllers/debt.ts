@@ -74,12 +74,16 @@ export default {
     const [revenue] = await RevenueModel.find({ userId });
     const [debts] = await DebtModel.find({ userId });
 
+    if (!budget || !revenue || !debts) {
+      return res.send("Cannot get payoff");
+    }
+
     let time = await getTimeToPayOff(
       debts.debts,
       budget.budget,
       revenue.revenue
     );
 
-    res.send(time);
+    return res.send(time);
   },
 };
