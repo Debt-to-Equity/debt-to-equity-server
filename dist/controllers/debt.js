@@ -61,8 +61,11 @@ exports.default = {
         const [budget] = await Budget_1.Budget.find({ userId });
         const [revenue] = await Revenue_1.Revenue.find({ userId });
         const [debts] = await Debt_1.Debt.find({ userId });
+        if (!budget || !revenue || !(debts === null || debts === void 0 ? void 0 : debts.debts)) {
+            return res.send("Cannot get payoff");
+        }
         let time = await getTimeToPayOff_1.getTimeToPayOff(debts.debts, budget.budget, revenue.revenue);
-        res.send(time);
+        return res.send(time);
     },
 };
 //# sourceMappingURL=debt.js.map
